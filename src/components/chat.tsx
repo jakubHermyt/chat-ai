@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
-// import { useChat } from '../hooks/useChat
+import useChat from "@/hooks/useChatResponse";
 
 interface Message {
     text: string;
@@ -11,23 +11,27 @@ interface Message {
 const Chat: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputText, setInputText] = useState<string>('');
-    const [loading, setLoading] = useState<boolean>(false);
-    // const { getResponse } = useChat();
+    const [globalLoading, setGlobalLoading] = useState(false)
+    const {sendMessage} = useChat()
 
     useEffect(() => {
         // Initial message
-        setMessages([{ text: 'What can I help you?', isUser: false }]);
+        setMessages([{ text: 'How can I help you?', isUser: false }]);
     }, []);
 
     const handleSend = async () => {
         if (inputText.trim() !== '') {
+            setGlobalLoading(true)
             setMessages([...messages, { text: inputText, isUser: true }]);
             setInputText('');
-            setLoading(true);
 
-            // const response = await getResponse(inputText);
-            // setMessages([...messages, { text: response, isUser: false }]);
-            // setLoading(false);
+            const response = await sendMessage(inputText);
+            const computeMessage: string[] = []
+            for await (const chunk of response) {
+                computeMessage.push(chunk)
+            }
+            setMessages(prev => [...prev, {text: computeMessage.join(""), isUser: false}])
+            setGlobalLoading(false)
         }
     };
 
@@ -54,7 +58,7 @@ const Chat: React.FC = () => {
                         {message.text}
                     </div>
                 ))}
-                {loading && (
+                {globalLoading && (
                     <div className="flex justify-center items-center text-gray-500 dark:text-gray-400">
                         Loading...
                     </div>
@@ -71,9 +75,10 @@ const Chat: React.FC = () => {
                 />
                 <button
                     onClick={handleSend}
-                    disabled={loading || inputText.trim() === ''}
+                    disabled={globalLoading || inputText.trim() === ''}
                     className={`mt-2 w-full bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none ${
-                        loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600 focus:bg-blue-600'
+                        globalLoading
+                            ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600 focus:bg-blue-600'
                     }`}
                 >
                     Send
