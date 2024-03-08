@@ -1,6 +1,5 @@
 AI chatbot based on local LLM
 
-
 ## Getting Started
 
 First, run the development server:
@@ -16,6 +15,7 @@ bun dev
 ```
 
 ## Requirements:
+
 - Node v21
 - Npm v10
 - Ollama
@@ -23,7 +23,6 @@ bun dev
 Open [http://localhost:3000/](http://localhost:3000) with your browser to see the result.
 
 Open [http://localhost:3000/chat](http://localhost:3000/chat) with your open Chat
-
 
 ## Learn More
 
