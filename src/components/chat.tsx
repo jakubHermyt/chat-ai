@@ -7,6 +7,7 @@ import React, {
   type KeyboardEvent,
 } from "react";
 import useChat from "@/hooks/useChatResponse";
+import { marked } from "marked";
 
 interface Message {
   text: string;
@@ -63,10 +64,9 @@ const Chat: React.FC = () => {
               message.isUser
                 ? "self-end bg-blue-500 text-white"
                 : "bg-gray-200 dark:bg-gray-700"
-            }`}
-          >
-            {message.text}
-          </div>
+            } overflow-scroll`}
+            dangerouslySetInnerHTML={{ __html: marked(message.text) }}
+          />
         ))}
         {globalLoading && (
           <div className="flex items-center justify-center text-gray-500 dark:text-gray-400">
