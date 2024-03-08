@@ -1,5 +1,6 @@
 import {useState} from 'react';
-import {Ollama} from "langchain/llms/ollama"
+import {Ollama} from '@langchain/community/llms/ollama';
+
 
 const ollamaClient = new Ollama({
     baseUrl: "http://localhost:11434",
